@@ -1,0 +1,37 @@
+{% extendsRootView layouts/Admin.html %}
+
+{% block title %}
+Admin ACP::Forums Browse
+{% endblock %}
+
+{% js %}
+<script>
+    const getForums = async () => {
+        const response = await fetch("/admin/forums/getAllParentNull");
+        const forums = await response.json();
+
+        const list = document.getElementById("list");
+
+        forums.forEach(forum => {
+            const listItem = document.createElement("div");
+            listItem.classList.add("list__item");
+
+            const title = document.createElement("span");
+            title.innerText = forum.title;
+            listItem.appendChild(title);
+
+            list.appendChild(listItem);
+        })
+    }
+
+    getForums();
+</script>
+{% endjs %}
+
+{% block content %}
+    <h1>Admin ACP Forums::Browse</h1>
+
+    <div class="list" id="list">
+
+    </div>
+{% endblock %}

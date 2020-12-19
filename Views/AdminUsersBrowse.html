@@ -1,0 +1,88 @@
+{% extendsRootView layouts/Admin.html %} {% block title %} Admin ACP {% endblock
+%} {% style %}
+<style>
+  .users .list__item {
+    cursor: pointer;
+  }
+</style>
+{% endstyle %} {% js %}
+<script>
+  let users = [];
+</script>
+<script>
+  const modal = document.querySelector(".modal");
+  const overlay = document.querySelector(".overlay");
+  const closeBtn = document.querySelector(".close-modal");
+
+  const openModal = function () {
+    modal.classList.remove("hidden");
+    overlay.classList.remove("hidden");
+  };
+
+  const closeModal = function () {
+    modal.classList.add("hidden");
+    overlay.classList.add("hidden");
+  };
+
+  closeBtn.addEventListener("click", closeModal);
+  overlay.addEventListener("click", closeModal);
+</script>
+<script>
+  const getUsers = async () => {
+    const response = await fetch("/admin/users/browse");
+    users = await response.json();
+
+    const list = document.getElementById("list");
+
+    users.forEach((user) => {
+      const listItem = document.createElement("div");
+      listItem.classList.add("list__item");
+      listItem.dataset.user_id = user.id;
+
+      const displayName = document.createElement("span");
+      displayName.innerText = user.displayName;
+      listItem.appendChild(displayName);
+
+      if (user.group) {
+        const groupName = document.createElement("span");
+        groupName.innerText = user.group.title;
+        listItem.appendChild(groupName);
+      }
+
+      list.appendChild(listItem);
+    });
+
+    const btns = document.querySelectorAll(".users .list__item");
+    btns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        openModal();
+
+        const content = modal.querySelector(".content");
+        const displayName = content.querySelector(".display_name");
+        const group = content.querySelector(".group");
+        users.forEach((user) => {
+          if (user.id === btn.dataset.user_id) {
+            displayName.innerText = user.displayName;
+            group.innerText = user.group.title;
+          }
+        });
+      });
+    });
+  };
+
+  getUsers();
+</script>
+{% endjs %} {% block content %}
+<h1>Admin ACP Users::Browse</h1>
+
+<div class="list users" id="list"></div>
+
+<div class="modal hidden">
+  <button class="close-modal">&times;</button>
+  <div class="content">
+    <h1 class="display_name"></h1>
+    <h3 class="group"></h3>
+  </div>
+</div>
+<div class="overlay hidden"></div>
+{% endblock %}

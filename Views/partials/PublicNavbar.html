@@ -1,0 +1,61 @@
+{% block js %}
+<script>
+    const menuList = document.getElementById("menuList");
+
+    const getActiveMenu = async () => {
+        const response = await fetch("/admin/menus/getActiveMenu");
+        const data = await response.json();
+
+        data.menu.items.forEach(item => {
+            let display = true;
+            const display_conditions = JSON.parse(item.display_conditions);
+            if (display_conditions) {
+                display_conditions.forEach(condition => {
+                    switch (condition) {
+                        case "is_admin":
+                            if (data.user && data.user.group.permissionSet.can_access_acp) {
+                                display = true;
+                            } else {
+                                display = false;
+                            }
+                            break;
+                        case "is_logged_in":
+                            if (!data.user) {
+                                display = false;
+                            }
+                            break;
+                        case "not_logged_in":
+                            if (data.user) {
+                                display = false
+                            }
+                            break;
+                    }
+                })
+            }
+
+            if (display) {
+                const li = document.createElement("li");
+                li.classList.add("navbar__list-item");
+
+                const a = document.createElement("a");
+                a.classList.add("navbar__link");
+                a.href = item.uri;
+                a.innerText = item.title;
+                li.appendChild(a);
+                menuList.appendChild(li);
+            }
+
+
+        })
+    }
+
+    getActiveMenu();
+</script>
+{% endblock %}
+
+<nav class="navbar">
+    <h3 class="navbar__logo">Inforum</h3>
+    <ul class="navbar__list" id="menuList">
+
+    </ul>
+</nav>

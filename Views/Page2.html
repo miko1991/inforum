@@ -1,0 +1,63 @@
+{% extendsRootView layouts/Public.html %}
+
+{% block title %}
+{% echo $page->title %}
+{% endblock %}
+
+{% style %}
+<style>
+    .block {
+        display: flex;
+    }
+    .column {
+        display: flex;
+        align-items: center;
+    }
+    .column-left {
+        justify-content: flex-start;
+    }
+    .column-center {
+        justify-content: center;
+    }
+    .column-right {
+        justify-content: flex-end;
+    }
+    .column-100 {
+        width: 100%;
+    }
+    .column-50 {
+        width: 50%;
+    }
+    .column-33 {
+        width: 33.3%;
+    }
+</style>
+{% endstyle %}
+
+{% block content %}
+    <h1>{% echo $page->title %}</h1>
+
+    <div>
+        {% foreach(json_decode($page->content, true) as $block): %}
+        <div class="block">
+                {% if (count($block["columns"]) == 1): %}
+                {% $width = "100"; %}
+                {% elseif (count($block["columns"]) == 2): %}
+                {% $width = "50"; %}
+                {% else: %}
+                {% $width = "33" %}
+                {% endif; %}
+
+                {% foreach($block["columns"] as $column): %}
+                <div class="column column-{% echo 100 / count($block['columns']) %} column-{% echo $column['horizontal_align'] %}">
+                    {% if (isset($column["type"])): %}
+                    <div>
+                        {% Kernel\\PageSection::parse($column["type"], isset($column["value"]) ? $column["value"] : null) %}
+                    </div>
+                    {% endif; %}
+                </div>
+                {% endforeach; %}
+        </div>
+        {% endforeach; %}
+    </div>
+{% endblock %}

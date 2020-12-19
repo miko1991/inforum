@@ -1,0 +1,59 @@
+{% extendsRootView layouts/Admin.html %}
+
+
+{% js %}
+<script>
+        const form = document.getElementById("form");
+        form.addEventListener("submit", async e => {
+        e.preventDefault();
+
+        const settings = [];
+
+        const groups = document.querySelectorAll(".form__group");
+        groups.forEach(group => {
+            const input = group.querySelector("input");
+            settings.push({
+                prop: input.id,
+                value: input.value
+            })
+        })
+
+
+        const formData = new FormData();
+        formData.append("settings", JSON.stringify(settings));
+
+        const response = await fetch("/admin/settings/save", {
+            method: "post",
+            body: formData
+        });
+        const data = await response.json();
+        if (data.success) {
+            window.location = "/admin/settings"
+        }
+    })
+</script>
+{% endjs %}
+
+{% block content %}
+<div>
+    <h1>Settings</h1>
+    <form id="form">
+        {% foreach($settings as $settingGroup): %}
+            <h3>{{ $settingGroup->title }}</h3>
+            <p style="margin-bottom: 1rem;">{{ $settingGroup->description }}</p>
+
+            {% foreach($settingGroup->settings as $setting): %}
+                <div class="form__group">
+                    <label class="form__label">{{ $setting->title }}</label>
+                    <input id="{{ $setting->prop }}" value="{{ $setting->value }}" class="form__input" />
+                    <p class="form__error"></p>
+                </div>
+            {% endforeach; %}
+        {% endforeach; %}
+
+
+
+        <button class="form__button">Save</button>
+    </form>
+</div>
+{% endblock %}

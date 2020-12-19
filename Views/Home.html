@@ -1,0 +1,25 @@
+{% extendsRootView layouts/Public.html %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+{% if (!$user): %}
+    <a href="/auth/login">
+        Login
+    </a>
+<br>
+<a href="/auth/register">
+        Register
+</a>
+
+{% else: %}
+
+    {% if ($user->group->permissionSet->can_access_acp): %}
+        <a href="/admin">Admin ACP</a>
+    {% endif %}
+    <a href="/profile/{{ $user->id }}">View Your Profile</a>
+    <a href="/auth/logout">Logout</a>
+{% endif; %}
+{% endblock %}

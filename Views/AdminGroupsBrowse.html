@@ -1,0 +1,37 @@
+{% extendsRootView layouts/Admin.html %}
+
+{% block title %}
+Admin ACP
+{% endblock %}
+
+{% js %}
+<script>
+    const getUsers = async () => {
+        const response = await fetch("/admin/groups/browse");
+        const groups = await response.json();
+
+        const list = document.getElementById("list");
+
+        groups.forEach(user => {
+            const listItem = document.createElement("div");
+            listItem.classList.add("list__item");
+
+            const title = document.createElement("span");
+            title.innerText = user.title;
+            listItem.appendChild(title);
+
+            list.appendChild(listItem);
+        })
+    }
+
+    getUsers();
+</script>
+{% endjs %}
+
+{% block content %}
+    <h1>Admin ACP Groups::Browse</h1>
+
+    <div class="list" id="list">
+
+    </div>
+{% endblock %}

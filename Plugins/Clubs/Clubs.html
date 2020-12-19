@@ -1,0 +1,20 @@
+{% extendsRootView layouts/Admin.html %}
+
+{% block title %}Clubs{% endblock %}
+
+{% block content %}
+
+    <h1>Clubs</h1>
+
+    <a href="/admin/clubs/create">Create Club</a>
+
+    <div class="list">
+        {% foreach($clubs as $club): %}
+            <div class="list__item">
+                <span>{% echo $club->title %}</span>
+                <a href="/admin/clubs/{% echo $club->id %}/delete">Delete</a>
+            </div>
+        {% endforeach; %}
+    </div>
+
+{% endblock %}

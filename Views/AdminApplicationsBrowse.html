@@ -1,0 +1,92 @@
+{% extendsRootView layouts/Admin.html %}
+
+{% block title %}
+Admin ACP
+{% endblock %}
+
+{% js %}
+<script src="/Public/js/DragAndDrop.js"></script>
+{% endjs %}
+
+{% js %}
+<script>
+    let apps;
+
+    const container = document.getElementById("list");
+    container.classList.add("droppable");
+    handleDragOver(container);
+
+
+    const getApps = async () => {
+        const response = await fetch("/admin/applications/browse");
+        const data = await response.json();
+
+        apps = data.apps;
+        apps.forEach((app, index) => {
+            const listItem = document.createElement("div");
+            listItem.draggable = true;
+            listItem.classList.add("list__item");
+            listItem.classList.add("draggable")
+
+            listItem.dataset.id = app.id;
+            listItem.dataset.order = app.order;
+
+            const span = document.createElement("span");
+            span.innerText = app.title;
+            listItem.appendChild(span);
+
+            const locked = document.createElement("span");
+            locked.innerText = app.locked ? "Locked" : "Not Locked";
+            listItem.appendChild(locked);
+
+            const a = document.createElement("a");
+            a.href = "#";
+            a.innerText = parseInt(app.enabled) === 1 ? "Disable" : "Enable";
+            a.addEventListener("click", async () => {
+                const response = await fetch("/admin/applications/toggle/"+app.id);
+                const enabled = await response.json();
+                a.innerText = enabled ? "Disable" : "Enable";
+            })
+            listItem.appendChild(a);
+
+            listItem.addEventListener("dragstart", () => {
+                listItem.classList.add("dragging");
+            })
+
+            listItem.addEventListener("dragend", async () => {
+                listItem.classList.remove("dragging");
+
+                const _apps = [...apps];
+                const children = [...container.querySelectorAll(".list__item")];
+                children.forEach((child, childIndex) => {
+                    for (const _app of _apps) {
+                        if (_app.id === child.dataset.id) {
+                            _app.order = childIndex;
+                        }
+                    }
+                })
+
+                const formData = new FormData();
+                formData.append("apps", JSON.stringify(_apps));
+
+                await fetch("/admin/applications/reorder", {
+                    method: "post",
+                    body: formData
+                })
+            })
+
+            container.appendChild(listItem);
+        })
+    }
+
+    getApps();
+</script>
+{% endjs %}
+
+{% block content %}
+    <h1>Admin ACP Applications::Browse</h1>
+
+    <div class="list" id="list">
+
+    </div>
+{% endblock %}

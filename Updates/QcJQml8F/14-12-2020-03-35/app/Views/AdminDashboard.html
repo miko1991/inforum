@@ -1,0 +1,28 @@
+{% extendsRootView layouts/Admin.html %} {% block title %} Admin ACP::Dashboard
+{% endblock %} {% js %}
+<script>
+  const checkHasUpdate = async () => {
+    const response = await fetch("/admin/updater/checkHasUpdate");
+    const data = await response.json();
+
+    let result;
+    if (data.hasUpdate === true) {
+      result = "Update available";
+    } else {
+      result = "Already up to date";
+    }
+
+    const updaterHeading = document.querySelector("#updater h3");
+    updaterHeading.innerText = result;
+  };
+
+  checkHasUpdate();
+</script>
+{% endjs %} {% block content %}
+<h1>Admin ACP Dashboard 2</h1>
+
+<div id="updater">
+  <h3>Checking For Updates</h3>
+</div>
+
+{% endblock %}

@@ -1,0 +1,146 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  font-family: "Montserrat", sans-serif;
+  background-color: #eeeeee;
+}
+
+h1 {
+  margin-bottom: 1rem;
+}
+
+.form {
+  width: 400px;
+  margin: 5rem auto 0;
+  padding: 1rem;
+  border: 1px solid black;
+  background-color: white;
+}
+
+.form__group {
+  margin-bottom: 1rem;
+}
+
+.form__label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.form__input {
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.form__button {
+  background-color: aquamarine;
+  color: black;
+  padding: 0.5rem 1rem;
+  border: none;
+  cursor: pointer;
+}
+
+.form__error {
+  font-size: 12px;
+  color: #de0000;
+}
+
+.form__alert--error {
+  border: darkred;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  background-color: pink;
+  color: black;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: #ccc;
+}
+
+.navbar__logo {
+  font-size: 20px;
+}
+
+.navbar__list {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+
+.navbar__list-item {
+  margin-right: 1rem;
+}
+
+.navbar__list-item:last-child {
+  margin-right: 0;
+}
+
+.navbar__link {
+  color: black;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+
+.list__item {
+  padding: 1rem;
+  border: 1px solid black;
+  border-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.list__item:last-child {
+  border-bottom: 1px solid black;
+}
+
+.hidden {
+  display: none;
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 2rem;
+  color: #333;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  background-color: white;
+  padding: 1rem;
+  border-radius: 5px;
+  box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  z-index: 5;
+}

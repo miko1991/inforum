@@ -1,0 +1,19 @@
+{% extendsRootView layouts/Admin.html %}
+
+{% block title %}Contact Forms{% endblock %}
+
+{% block content %}
+
+    <h1>Contact Forms</h1>
+
+    <a href="/admin/pricing-tables/create">Create Pricing Table</a>
+
+    <div class="list">
+        {% foreach($widgets as $widget): %}
+            <div class="list__item">
+                <span>{{ $widget->widget_title }}</span>
+            </div>
+        {% endforeach; %}
+    </div>
+
+{% endblock %}

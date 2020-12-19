@@ -1,0 +1,95 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+a:link {
+    background-color: transparent;
+}
+
+html,
+body {
+    font-family: "Montserrat", sans-serif;
+    background-color: #eeeeee;
+    height: 100%;
+}
+
+.main {
+    display: flex;
+    height: 100%;
+}
+
+.sidebar {
+    min-width: 300px;
+    width: 300px;
+    background-color: #3fafff;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar__logo {
+    font-size: 30px;
+    padding: 3rem;
+    text-align: center;
+}
+
+.sidebar__content {
+    flex-grow: 1;
+    padding: 0 1rem;
+}
+
+.sidebar__logout-btn {
+    background-color: #ff4a7a !important;
+    color: white;
+    padding: 1rem;
+    text-decoration: none;
+    text-align: center;
+}
+
+.sidebar__item {
+    margin-bottom: 0.5rem;
+}
+
+.sidebar__item a {
+    margin-bottom: 1rem;
+    text-decoration: none;
+    color: black;
+    background-color: transparent !important;
+}
+
+.sidebar__item article {
+    margin-top: 0.5rem;
+}
+
+.sidebar__item ul {
+    list-style: none;
+}
+
+.sidebar__submenu {
+    display: none;
+}
+
+.sidebar__submenu--active {
+    display: block;
+}
+
+.sidebar__submenu a {
+    text-decoration: none;
+    color: black;
+    padding-left: 1rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.sidebar__submenu li:last-child a {
+    margin-bottom: 0;
+}
+
+.content {
+    flex-grow: 1;
+    overflow-y: auto;
+    height: 100%;
+    padding: 1rem;
+}

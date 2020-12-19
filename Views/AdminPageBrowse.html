@@ -1,0 +1,23 @@
+{% extendsRootView layouts/Admin.html %}
+
+{% block title %}
+Admin ACP
+{% endblock %}
+
+
+
+{% block content %}
+    <h1>Admin ACP Page::Browse</h1>
+
+    <div class="list">
+        {% foreach($pages as $page): %}
+            <div class="list__item">
+                <span>{{ $page->title }}</span>
+
+                <div>
+                    <a href="/admin/pages/{{ $page->id }}/edit">Edit</a>
+                </div>
+            </div>
+        {% endforeach; %}
+    </div>
+{% endblock %}

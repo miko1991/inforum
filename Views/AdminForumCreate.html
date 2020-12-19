@@ -1,0 +1,102 @@
+{% extendsRootView layouts/Admin.html %}
+
+{% block title %}
+Admin ACP::Add Forum
+{% endblock %}
+
+{% js %}
+<script src="/Public/js/Form.js"></script>
+<script>
+    const form = document.querySelector("#form");
+    form.addEventListener("submit", async e => {
+        e.preventDefault();
+
+        const newResource = {
+            title: document.getElementById("title"),
+            parent_id: document.getElementById("parent_id")
+        }
+
+        const formData = new FormData();
+        for (let [key, element] of Object.entries(newResource)) {
+            formData.append(key, element.value);
+        }
+
+        const response = await fetch("/admin/forums/add", {
+            method: "post",
+            body: formData
+        });
+        const data = await response.json();
+        if (response.status === 400) {
+            validateForm(newResource, data)
+        } else if (data.success) {
+            window.location = "/admin/forums"
+        }
+    })
+
+    const getParents = async () => {
+        const response = await fetch("/admin/forums/getAll");
+        const forums = await response.json();
+        const select = document.querySelector("#parent_id");
+
+        const parsedForums = parseForumsLinear(forums, 1);
+        parsedForums.forEach(forum => {
+            const option = document.createElement("option");
+            option.value = forum.id;
+            option.innerText = forum.selectTitle;
+            select.appendChild(option)
+        })
+    }
+
+    getParents()
+
+    const parseForumsLinear = (forums, level) => {
+        let parsedLevel = "";
+        for (let i = 0; i < level; i++) {
+            parsedLevel += "-";
+        }
+
+        const parsed = [];
+        for (let forum of forums) {
+            if (!forum.parent_id) {
+                parsed.push({ ...forum, selectTitle: parsedLevel + " " + forum.title });
+                parseChildrenLinear(forum, forums, parsed, level + 1);
+            }
+        }
+
+        return parsed;
+    };
+
+    const parseChildrenLinear = (forum, forums, parsed, level) => {
+        let parsedLevel = "";
+        for (let i = 0; i < level; i++) {
+            parsedLevel += "-";
+        }
+
+        const children = forums.filter((f) => f.parent_id === forum.id);
+        for (let child of children) {
+            parsed.push({ ...child, selectTitle: parsedLevel + " " + child.title });
+            parseChildrenLinear(child, forums, parsed, level + 1);
+        }
+    };
+</script>
+{% endjs %}
+
+{% block content %}
+<h1>Create Forum</h1>
+<form id="form">
+    <div class="form__group">
+        <label class="form__label">Title</label>
+        <input class="form__input" id="title" />
+        <span class="form__error"></span>
+    </div>
+
+    <div class="form__group">
+        <label class="form__label">Parent</label>
+        <select class="form__input" id="parent_id">
+            <option value="">No Parent</option>
+        </select>
+    </div>
+
+    <button class="form__button">Create</button>
+</form>
+{% endblock %}

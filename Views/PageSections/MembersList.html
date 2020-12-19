@@ -1,0 +1,9 @@
+<h1>Members List</h1>
+
+<div class="list">
+    {% foreach($members as $member): %}
+        <div class="list__item">
+            {% echo $member->displayName %}
+        </div>
+    {% endforeach; %}
+</div>

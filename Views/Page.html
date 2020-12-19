@@ -1,0 +1,41 @@
+{% extendsRootView layouts/Public.html %}
+
+{% block title %}
+{% echo $page->title %}
+{% endblock %}
+
+{% style %}
+<style>
+    .block {
+        display: flex;
+    }
+    .column {
+    }
+    .column-left {
+        justify-content: flex-start;
+    }
+    .column-center {
+        justify-content: center;
+    }
+    .column-right {
+        justify-content: flex-end;
+    }
+    .column-100 {
+        width: 100%;
+    }
+    .column-50 {
+        width: 50%;
+    }
+    .column-33 {
+        width: 33.3%;
+    }
+</style>
+{% endstyle %}
+
+{% block content %}
+    <h1>{% echo $page->title %}</h1>
+
+    <div>
+        {% page %}
+    </div>
+{% endblock %}

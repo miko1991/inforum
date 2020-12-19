@@ -1,0 +1,37 @@
+{% extendsRootView layouts/Admin.html %}
+
+{% block title %}
+Admin ACP
+{% endblock %}
+
+{% block content %}
+    <h1>Admin ACP Plugin::Browse</h1>
+
+    <div class="list">
+        {% foreach($plugins as $plugin): %}
+            <div class="list__item">
+
+                {% if ($plugin["error"] == true): %}
+                <span>{{ $plugin["dir"] }}</span>
+                <div>
+                    <span>PLUGIN ERROR</span>
+                </div>
+                {% else: %}
+                    <span>{{ $plugin["config"]["fullName"] }}</span>
+
+                    {% if ($plugin["model"] != false): %}
+                    <div>
+                        <a href="{{ $plugin['config']['defaultUri'] }}">View</a>
+                        <a href="/admin/plugins/{{ $plugin['model']->id }}/deactivate">Deactivate</a>
+
+                    </div>
+                    {% else: %}
+                    <div>
+                        <a href="/admin/plugins/{{ $plugin['config']['namespace'] }}/install">Install</a>
+                    </div>
+                    {% endif; %}
+                {% endif; %}
+            </div>
+        {% endforeach; %}
+    </div>
+{% endblock %}

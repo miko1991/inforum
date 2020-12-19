@@ -1,0 +1,48 @@
+{% extendsRootView layouts/Public.html %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<form class="form" action="/auth/register" method="POST">
+    <h1>Register</h1>
+
+    {% if (isset($error)): %}
+    <div class="form__alert--error">{{$error}}</div>
+    {% endif; %}
+
+
+    <div class="form__group">
+        <label class="form__label">Display Name</label>
+        <input name="display_name" value="{% if (isset($with->display_name)) echo $with->display_name %}" class="form__input" />
+        {% if (isset($errors->display_name)): %}
+        <span class='form__error'>{{$errors->display_name}}</span>
+        {% endif; %}
+    </div>
+
+    <div class="form__group">
+        <label class="form__label">Email</label>
+        <input name="email" value="{% if (isset($with->email)) echo $with->email %}" class="form__input" />
+        {% if (isset($errors->email)): %}
+        <span class='form__error'>{{$errors->email}}</span>
+        {% endif; %}
+    </div>
+
+    <div class="form__group">
+        <label class="form__label">Password</label>
+        <input name="password" class="form__input" />
+        {% if (isset($errors->password)): %}
+        <span class='form__error'>{{$errors->password}}</span>
+        {% endif; %}
+    </div>
+
+    <div class="form__group">
+        <label class="form__label">Password Confirmation</label>
+        <input name="password_again" class="form__input" />
+        {% if (isset($errors->password_again)): %}
+        <span class='form__error'>{{$errors->password_again}}</span>
+        {% endif; %}
+    </div>
+
+    <button class="form__button">Register</button>
+</form>
+{% endblock %}

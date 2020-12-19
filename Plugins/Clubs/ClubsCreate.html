@@ -1,0 +1,31 @@
+
+{% extendsRootView layouts/Admin.html %}
+
+{% block title %}
+Clubs Create
+{% endblock %}
+
+{% block content %}
+    <h1>Clubs Create</h1>
+
+    <form action="/admin/clubs/create" method="post">
+        {% if (isset($error)): %}
+        <div class="form__alert--error">{{$error}}</div>
+        {% endif; %}
+
+
+        <div class="form__group">
+            <label class="form__label">Title</label>
+            <input name="title" value="{% if (isset($with->title)) echo $with->title %}" class="form__input" />
+            {% if (isset($errors->title)): %}
+            <span class='form__error'>{{$errors->title}}</span>
+            {% endif; %}
+        </div>
+
+
+        <button class="form__button">Create</button>
+    </form>
+
+<br>
+
+{% endblock %}

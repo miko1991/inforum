@@ -1,0 +1,130 @@
+{% extendsRootView layouts/Admin.html %}
+
+{% block title %}
+Admin ACP
+{% endblock %}
+
+{% block js %}
+
+<script>
+    const menuItems = [];
+
+    const form = document.getElementById("form");
+    form.addEventListener("submit", async ev => {
+        ev.preventDefault();
+
+        const title = document.getElementById("title");
+        const formData = new FormData();
+        formData.append("title", title.value);
+        formData.append("items", JSON.stringify(menuItems));
+
+        await fetch("/admin/menus/add", {
+            method: "post",
+            body: formData
+        })
+
+        window.location = "/admin/menus";
+    })
+
+    const addItem = () => {
+        menuItems.push({
+            title: "",
+            uri: "",
+            display_conditions: []
+        });
+
+        const list = document.getElementById("menuItems")
+        const div = document.createElement("div");
+        div.id = "item_"+(menuItems.length - 1);
+
+        const title = document.createElement("input");
+        title.addEventListener("keyup", event => {
+            menuItems.forEach((item, index) => {
+                if (div.id === "item_"+index){
+                    menuItems[index].title = event.target.value;
+                }
+            })
+        })
+        title.placeholder = "Title";
+        div.appendChild(title);
+
+        const uri = document.createElement("input");
+        uri.addEventListener("keyup", event => {
+            menuItems.forEach((item, index) => {
+                if (div.id === "item_"+index){
+                    menuItems[index].uri = event.target.value;
+                }
+            })
+        })
+        uri.placeholder = "uri";
+        div.appendChild(uri);
+
+        const select = createDisplayConditions(div);
+        div.appendChild(select);
+
+        list.appendChild(div);
+    }
+
+    const createDisplayConditions = (div) => {
+        const select = document.createElement("select");
+        select.addEventListener("change", event => {
+            menuItems.forEach((item, index) => {
+                if (div.id === "item_"+index){
+                    menuItems[index].display_conditions.push(event.target.value);
+                }
+            })
+            select.remove();
+
+            const span = document.createElement("span");
+            span.innerText = event.target.value;
+            div.appendChild(span);
+
+            const newSelect = createDisplayConditions(div);
+            div.appendChild(newSelect)
+        })
+
+        const optionDefault = document.createElement("option");
+        optionDefault.value = "";
+        optionDefault.innerText = "Choose Display Condition";
+        select.appendChild(optionDefault);
+
+        const isAdmin = document.createElement("option");
+        isAdmin.value = "is_admin";
+        isAdmin.innerText = "Is Admin";
+        select.appendChild(isAdmin);
+
+        const isLoggedIn = document.createElement("option");
+        isLoggedIn.value = "is_logged_in";
+        isLoggedIn.innerText = "Is Logged In";
+        select.appendChild(isLoggedIn);
+
+        const notLoggedIn = document.createElement("option");
+        notLoggedIn.value = "not_logged_in";
+        notLoggedIn.innerText = "Not Logged In";
+        select.appendChild(notLoggedIn);
+
+        return select;
+    }
+</script>
+
+{% endblock %}
+
+{% block content %}
+    <h1>Admin ACP Menu::Add</h1>
+
+    <form id="form">
+        <div class="form__group">
+            <label class="form__label">Title</label>
+            <input id="title" class="form__input" />
+        </div>
+        <button type="button" onclick="addItem()">Add Menu Item</button>
+
+        <div id="menuItems"></div>
+
+        <button class="form__button">Add</button>
+    </form>
+
+<br>
+
+
+{% endblock %}

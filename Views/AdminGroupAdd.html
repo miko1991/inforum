@@ -1,0 +1,65 @@
+{% extendsRootView layouts/Admin.html %}
+
+{% block title %}
+Admin ACP
+{% endblock %}
+
+{% js %}
+<script src="/Public/js/Form.js"></script>
+<script>
+    const form = document.getElementById("form");
+    form.addEventListener("submit", async e => {
+        e.preventDefault();
+
+        const newResource = {
+            title: document.getElementById("title"),
+        }
+
+        const formData = new FormData();
+        for (let [key, element] of Object.entries(newResource)) {
+            formData.append(key, element.value);
+        }
+
+        formData.append("can_access_acp", document.getElementById("can_access_acp").checked ? "1" : "0");
+
+        const response = await fetch("/admin/groups/add", {
+            method: "post",
+            body: formData
+        });
+        const data = await response.json();
+        if (response.status === 400) {
+            validateForm(newResource, data)
+        } else if (data.success) {
+            window.location = "/admin/groups"
+        }
+    })
+</script>
+{% endjs %}
+
+{% block content %}
+    <h1>Admin ACP Groups::Add</h1>
+
+    <form id="form">
+        <div class="form__group">
+            <label class="form__label">Title</label>
+            <input id="title" class="form__input" />
+            <p class='form__error'></p>
+        </div>
+
+        <h3>Permissions</h3>
+
+        <div class="form__group">
+            <label>
+                Can Access Acp
+                <input type="checkbox" id="can_access_acp" />
+            </label>
+
+            <p class='form__error'></p>
+        </div>
+
+        <button class="form__button">Add</button>
+    </form>
+
+<br>
+
+{% endblock %}

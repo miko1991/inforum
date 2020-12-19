@@ -1,0 +1,85 @@
+{% js %}
+<script>
+    const recipesList = document.querySelector(".recipes__list");
+
+    const renderCurrentRecipe = (recipe) => {
+        const recipesRecipe = document.querySelector(".recipes__recipe");
+        recipesRecipe.innerHTML = `
+<div>
+    <h3>${recipe.title}</h3>
+    <div>
+        <span>Preparation Time: ${recipe.preparation_time}</span>
+        <span>||</span>
+        <span>Cooking Time: ${recipe.cooking_time}</span>
+        <span>||</span>
+        <span>Difficulty: ${recipe.difficulty}</span>
+    </div>
+</div>
+        `
+    }
+
+    const getAllRecipes = async () => {
+        const response = await fetch("/admin/recipes/getAll");
+        const recipes = await response.json();
+
+        recipes.forEach(recipe => {
+            recipesList.innerHTML += `
+<div class="recipes__list-recipe" data-recipe_id="${recipe.id}">
+<h3>${recipe.title}</h3>
+</div>
+`;
+        })
+
+        const recipesListRecipe = recipesList.querySelectorAll(".recipes__list-recipe");
+        recipes.forEach(recipe => {
+            recipesListRecipe.forEach((recipeListItem) => {
+                recipeListItem.addEventListener("click", () => {
+
+
+                    if (recipeListItem.dataset.recipe_id === recipe.id) {
+                        renderCurrentRecipe(recipe);
+                    }
+
+                })
+
+
+            })
+        })
+
+    }
+
+    getAllRecipes()
+</script>
+{% endjs %}
+
+{% style %}
+<style>
+    .recipes {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        grid-gap: 1rem;
+    }
+
+    .recipes__list {
+        border: 1px solid black;
+    }
+
+    .recipes__recipe {
+        border: 1px solid black;
+    }
+
+    .recipes__list-recipe {
+        cursor: pointer;
+    }
+</style>
+{% endstyle %}
+
+<h1>Browse Recipes</h1>
+<div class="recipes">
+    <div class="recipes__list">
+
+    </div>
+    <div class="recipes__recipe">
+
+    </div>
+</div>

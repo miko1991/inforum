@@ -1,0 +1,57 @@
+{% extendsRootView layouts/Admin.html %} {% block title %} Admin ACP::Dashboard
+{% endblock %} {% js %}
+<script>
+  const version = "{{ $version }}";
+  let updates = [];
+
+  const update = async () => {
+    console.log("updating");
+
+    const formData = new FormData();
+    formData.append("updates", JSON.stringify(updates));
+
+    const response = await fetch("/admin/updater/update", {
+      method: "post",
+      body: formData,
+    });
+
+    const data = await response.json();
+    console.log(data);
+  };
+
+  const checkHasUpdate = async () => {
+    const response = await fetch(
+      "http://localhost:5001/api/update/hasUpdate?version=" + version
+    );
+    const data = await response.json();
+
+    let result;
+    data.forEach((update) => {
+      console.log(update);
+    });
+
+    updates = data;
+
+    if (data.length) result = `Found ${updates.length} updates`;
+    else result = "Already up to date";
+
+    document.querySelector("#updater h3").innerText = result;
+
+    const updater = document.querySelector("#updater");
+    const button = document.createElement("button");
+    button.type = "button";
+    button.innerText = "Update";
+    button.addEventListener("click", async () => await update());
+    updater.appendChild(button);
+  };
+
+  checkHasUpdate();
+</script>
+{% endjs %} {% block content %}
+<h1>Admin ACP Dashboard</h1>
+
+<div id="updater">
+  <h3>Checking For Updates</h3>
+</div>
+
+{% endblock %}

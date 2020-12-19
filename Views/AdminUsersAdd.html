@@ -1,0 +1,88 @@
+{% extendsRootView layouts/Admin.html %}
+
+{% block title %}
+Admin ACP
+{% endblock %}
+
+{% js %}
+<script>
+    const form = document.getElementById("form");
+    form.addEventListener("submit", async e => {
+        e.preventDefault();
+
+        const newResource = {
+            group: document.getElementById("group"),
+            display_name: document.getElementById("display_name"),
+            email: document.getElementById("email"),
+            password: document.getElementById("password"),
+            password_again: document.getElementById("password_again")
+        }
+
+
+        const formData = new FormData();
+        for (let [key, element] of Object.entries(newResource)) {
+            formData.append(key, element.value);
+        }
+
+
+        const response = await fetch("/admin/users/add", {
+            method: "post",
+            body: formData
+        });
+        const data = await response.json();
+        if (response.status === 400) {
+          validateForm(newResource, data, form)
+        } else if (data.success) {
+            window.location = "/admin/users"
+        }
+    })
+
+
+</script>
+{% endjs %}
+
+{% block content %}
+    <h1>Admin ACP Users::Add</h1>
+
+    <form id="form">
+        <div class="form__group">
+            <label class="form__label">Group</label>
+            <select id="group" class="form__input">
+                <option value="">Select One</option>
+                {% foreach($groups as $group): %}
+                <option value="{% echo $group->id %}">{% echo $group->title %}</option>
+                {% endforeach; %}
+            </select>
+            <p class="form__error"></p>
+        </div>
+
+
+        <div class="form__group">
+            <label class="form__label">Display Name</label>
+            <input id="display_name" class="form__input" />
+            <p class="form__error"></p>
+        </div>
+
+        <div class="form__group">
+            <label class="form__label">Email</label>
+            <input id="email" class="form__input" />
+            <p class="form__error"></p>
+
+        </div>
+
+        <div class="form__group">
+            <label class="form__label">Password</label>
+            <input id="password" class="form__input" />
+            <p class="form__error"></p>
+        </div>
+
+        <div class="form__group">
+            <label class="form__label">Password Confirmation</label>
+            <input id="password_again" class="form__input" />
+            <p class="form__error"></p>
+
+        </div>
+
+        <button class="form__button">Add</button>
+    </form>
+{% endblock %}
